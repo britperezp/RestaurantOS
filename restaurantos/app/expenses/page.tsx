@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { UserButton } from "@clerk/nextjs";
 import { useEffect, useState, type FormEvent, type ReactNode } from "react";
 import { expenseCategories, paymentMethods, type Expense, type ExpenseInput } from "@/lib/expenses";
+import { restaurantIdentity } from "@/lib/restaurant-identity";
 
 type ExpenseModal = "create" | "edit" | "view" | null;
 
@@ -145,7 +147,7 @@ export default function ExpensesPage() {
     <div className="app-shell">
       <aside className="sidebar">
         <Link className="brand" href="/" aria-label="RestaurantOS overview"><span className="brand-mark" aria-hidden="true"><span /><span /><span /></span><span>restaurant<span className="brand-os">OS</span></span></Link>
-        <div className="location-switcher"><span className="location-avatar">B</span><span className="location-copy"><strong>Bar Siena</strong><small>Downtown · Chicago</small></span><span className="chevron" aria-hidden="true">⌄</span></div>
+        <div className="location-switcher"><span className="location-avatar">{restaurantIdentity.initial}</span><span className="location-copy"><strong>{restaurantIdentity.name}</strong><small>{restaurantIdentity.location}</small></span><span className="chevron" aria-hidden="true">⌄</span></div>
         <p className="nav-label">WORKSPACE</p>
         <nav className="primary-nav" aria-label="Main navigation">
           <Link className="nav-link" href="/"><Icon name="grid" /><span>Overview</span></Link>
@@ -156,16 +158,16 @@ export default function ExpensesPage() {
         </nav>
         <div className="sidebar-bottom">
           <div className={`sidebar-note${databaseStatus === "error" ? " is-offline" : ""}`}><span className="status-dot" />{databaseStatus === "loading" ? "Connecting to database" : databaseStatus === "error" ? "Database connection failed" : isSaving ? "Saving expense" : "SQLite database connected"}</div>
-          <Link className="profile-link" href="/"><span className="profile-avatar">JM</span><span className="profile-copy"><strong>Jordan Miller</strong><small>Restaurant manager</small></span><span className="chevron" aria-hidden="true">⌄</span></Link>
+          <div className="profile-link"><UserButton /><span className="profile-copy"><strong>Your account</strong><small>Manage profile and sign out</small></span></div>
         </div>
       </aside>
 
       <main className="main-content">
-        <header className="topbar"><div className="breadcrumb"><Link href="/">Bar Siena</Link><span className="breadcrumb-divider">/</span><strong>Expenses</strong></div><div className="topbar-actions"><span className={`service-pill${databaseStatus === "error" ? " is-offline" : ""}`}><span className="status-dot" />{databaseStatus === "error" ? "Database offline" : databaseStatus === "loading" ? "Connecting" : "Database connected"}</span><span className="top-avatar">JM</span></div></header>
+        <header className="topbar"><div className="breadcrumb"><Link href="/">{restaurantIdentity.name}</Link><span className="breadcrumb-divider">/</span><strong>Expenses</strong></div><div className="topbar-actions"><span className={`service-pill${databaseStatus === "error" ? " is-offline" : ""}`}><span className="status-dot" />{databaseStatus === "error" ? "Database offline" : databaseStatus === "loading" ? "Connecting" : "Database connected"}</span></div></header>
 
         <div className="page-content expenses-page">
           <section className="welcome-row" aria-labelledby="page-title">
-            <div><p className="eyebrow">BAR SIENA <span className="eyebrow-dot">·</span> FINANCIAL CONTROL</p><h1 id="page-title">Expenses<span className="title-period">.</span></h1><p className="welcome-subtitle">Every cost accounted for, all in one place.</p></div>
+            <div><p className="eyebrow">{restaurantIdentity.name.toUpperCase()} <span className="eyebrow-dot">·</span> FINANCIAL CONTROL</p><h1 id="page-title">Expenses<span className="title-period">.</span></h1><p className="welcome-subtitle">Every cost accounted for, all in one place.</p></div>
             <button className="button button-primary expense-add-button" type="button" disabled={databaseStatus !== "ready"} onClick={openCreate}><Icon name="plus" /> Add expense</button>
           </section>
 

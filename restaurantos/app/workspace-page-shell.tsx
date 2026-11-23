@@ -1,13 +1,16 @@
 import Link from "next/link";
+import { UserButton } from "@clerk/nextjs";
 import type { ReactNode } from "react";
+import { restaurantIdentity } from "@/lib/restaurant-identity";
 
-type WorkspaceRoute = "waste" | "profit-loss";
+type WorkspaceRoute = "waste" | "profit-loss" | "purchasing";
 
 const navigationItems = [
   { label: "Overview", href: "/", icon: "grid" },
   { label: "Inventory", href: "/inventory", icon: "inventory" },
   { label: "Waste alerts", href: "/waste", icon: "waste", route: "waste" },
   { label: "Expenses", href: "/expenses", icon: "receipt" },
+  { label: "Suppliers & purchasing", href: "/purchasing", icon: "purchasing", route: "purchasing" },
   { label: "Profit & loss", href: "/profit-loss", icon: "profit", route: "profit-loss" },
 ] satisfies { label: string; href: string; icon: string; route?: WorkspaceRoute }[];
 
@@ -17,6 +20,7 @@ export function WorkspaceIcon({ name }: { name: string }) {
     inventory: <><path d="m4 7 8-4 8 4-8 4-8-4Z" /><path d="m4 12 8 4 8-4M4 17l8 4 8-4M4 7v10M20 7v10" /></>,
     waste: <><path d="M12 3 2.8 19a1.4 1.4 0 0 0 1.2 2h16a1.4 1.4 0 0 0 1.2-2L12 3Z" /><path d="M12 9v4M12 17h.01" /></>,
     receipt: <><path d="M5 3h14v18l-3-2-4 2-4-2-3 2V3Z" /><path d="M9 8h6M9 12h6M9 16h3" /></>,
+    purchasing: <><path d="M3 7h18l-2 13H5L3 7Z" /><path d="M8 9V6a4 4 0 0 1 8 0v3M9 13h6" /></>,
     profit: <><path d="M4 19V5M4 19h17" /><path d="m7 15 4-4 3 2 6-7" /><path d="M16 6h4v4" /></>,
   };
 
@@ -32,8 +36,8 @@ export default function WorkspacePageShell({ activeRoute, title, children }: { a
           <span>restaurant<span className="brand-os">OS</span></span>
         </Link>
         <div className="location-switcher">
-          <span className="location-avatar">B</span>
-          <span className="location-copy"><strong>Bar Siena</strong><small>Downtown · Chicago</small></span>
+          <span className="location-avatar">{restaurantIdentity.initial}</span>
+          <span className="location-copy"><strong>{restaurantIdentity.name}</strong><small>{restaurantIdentity.location}</small></span>
           <span className="chevron" aria-hidden="true">⌄</span>
         </div>
         <p className="nav-label">WORKSPACE</p>
@@ -45,17 +49,13 @@ export default function WorkspacePageShell({ activeRoute, title, children }: { a
         </nav>
         <div className="sidebar-bottom">
           <div className="sidebar-note"><span className="status-dot" /> Books are up to date</div>
-          <Link className="profile-link" href="/">
-            <span className="profile-avatar">JM</span>
-            <span className="profile-copy"><strong>Jordan Miller</strong><small>Restaurant manager</small></span>
-            <span className="chevron" aria-hidden="true">⌄</span>
-          </Link>
+          <div className="profile-link"><UserButton /><span className="profile-copy"><strong>Your account</strong><small>Manage profile and sign out</small></span></div>
         </div>
       </aside>
       <main className="main-content">
         <header className="topbar">
-          <div className="breadcrumb"><Link href="/">Bar Siena</Link><span className="breadcrumb-divider">/</span><strong>{title}</strong></div>
-          <div className="topbar-actions"><span className="service-pill"><span className="status-dot" /> All locations</span><button className="icon-button" type="button" aria-label="Notifications"><span className="bell-icon">♧</span><i /></button><span className="top-avatar">JM</span></div>
+          <div className="breadcrumb"><Link href="/">{restaurantIdentity.name}</Link><span className="breadcrumb-divider">/</span><strong>{title}</strong></div>
+          <div className="topbar-actions"><span className="service-pill"><span className="status-dot" /> All locations</span><button className="icon-button" type="button" aria-label="Notifications"><span className="bell-icon">♧</span><i /></button></div>
         </header>
         <div className="page-content">
           {children}

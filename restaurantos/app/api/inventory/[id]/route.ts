@@ -1,4 +1,5 @@
 import { recordInventoryMutation } from "@/lib/inventory-db";
+import { getAuthenticatedUserId, unauthorizedApiResponse } from "@/lib/auth";
 
 type MutationBody = {
   type?: unknown;
@@ -15,6 +16,7 @@ function isFiniteNumber(value: unknown): value is number {
 }
 
 export async function PATCH(request: Request, context: RouteContext<"/api/inventory/[id]">) {
+  if (!await getAuthenticatedUserId()) return unauthorizedApiResponse();
   const { id } = await context.params;
   let body: MutationBody;
   try {

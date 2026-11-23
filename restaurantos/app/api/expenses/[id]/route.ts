@@ -1,8 +1,10 @@
 import { deleteExpense, updateExpense } from "@/lib/expenses-db";
 import { validateExpense } from "@/app/api/expenses/route";
 import type { ExpenseInput } from "@/lib/expenses";
+import { getAuthenticatedUserId, unauthorizedApiResponse } from "@/lib/auth";
 
 export async function PUT(request: Request, context: RouteContext<"/api/expenses/[id]">) {
+  if (!await getAuthenticatedUserId()) return unauthorizedApiResponse();
   const { id } = await context.params;
   let body: Partial<Record<keyof ExpenseInput, unknown>>;
   try {
@@ -21,6 +23,7 @@ export async function PUT(request: Request, context: RouteContext<"/api/expenses
 }
 
 export async function DELETE(_request: Request, context: RouteContext<"/api/expenses/[id]">) {
+  if (!await getAuthenticatedUserId()) return unauthorizedApiResponse();
   const { id } = await context.params;
   try {
     return deleteExpense(id)

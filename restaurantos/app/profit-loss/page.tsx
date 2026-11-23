@@ -1,6 +1,7 @@
 import WorkspacePageShell from "../workspace-page-shell";
 import { io } from "next/cache";
 import { Suspense } from "react";
+import { restaurantIdentity } from "@/lib/restaurant-identity";
 
 const sales = 8420;
 const foodCost = 2358;
@@ -43,7 +44,7 @@ export default function ProfitLossPage() {
   return (
     <WorkspacePageShell activeRoute="profit-loss" title="Profit & loss">
       <section className="welcome-row" aria-labelledby="page-title">
-        <div><p className="eyebrow">BAR SIENA <span className="eyebrow-dot">·</span> <Suspense fallback=""><ReportDate /></Suspense></p><h1 id="page-title">Profit & loss<span className="title-period">.</span></h1><p className="welcome-subtitle">Daily performance, cost structure, and margin signals.</p></div>
+        <div><p className="eyebrow">{restaurantIdentity.name.toUpperCase()} <span className="eyebrow-dot">·</span> <Suspense fallback=""><ReportDate /></Suspense></p><h1 id="page-title">Profit & loss<span className="title-period">.</span></h1><p className="welcome-subtitle">Daily performance, cost structure, and margin signals.</p></div>
       </section>
 
       <section className="module-stat-grid" aria-label="Daily profit and loss summary">

@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { ClerkProvider } from "@clerk/nextjs";
 import { Geist, Geist_Mono } from "next/font/google";
+import { restaurantIdentity } from "@/lib/restaurant-identity";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -13,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "RestaurantOS | Restaurant management",
+  title: `${restaurantIdentity.name} | RestaurantOS`,
   description: "Manage restaurant inventory, expenses, food costs, and profitability.",
 };
 
@@ -23,7 +25,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <ClerkProvider>{children}</ClerkProvider>
+      </body>
     </html>
   );
 }

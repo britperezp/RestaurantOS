@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { UserButton } from "@clerk/nextjs";
 import { useEffect, useState, useSyncExternalStore, type FormEvent, type ReactNode } from "react";
 import { inventoryCategories as categories, inventorySuppliers as suppliers, inventoryUnits, type Ingredient } from "@/lib/inventory";
+import { restaurantIdentity } from "@/lib/restaurant-identity";
 
 type InventoryFilter = "all" | "low" | "out";
 type ModalType = "ingredient" | "restock" | "adjust" | "history" | null;
@@ -225,8 +227,8 @@ export default function InventoryPage() {
           <span>restaurant<span className="brand-os">OS</span></span>
         </Link>
         <div className="location-switcher">
-          <span className="location-avatar">B</span>
-          <span className="location-copy"><strong>Bar Siena</strong><small>Downtown · Chicago</small></span>
+          <span className="location-avatar">{restaurantIdentity.initial}</span>
+          <span className="location-copy"><strong>{restaurantIdentity.name}</strong><small>{restaurantIdentity.location}</small></span>
           <span className="chevron" aria-hidden="true">⌄</span>
         </div>
         <p className="nav-label">WORKSPACE</p>
@@ -239,24 +241,20 @@ export default function InventoryPage() {
         </nav>
         <div className="sidebar-bottom">
           <div className={`sidebar-note${databaseStatus === "error" ? " is-offline" : ""}`}><span className="status-dot" />{databaseStatus === "loading" ? "Connecting to database" : databaseStatus === "error" ? "Database connection failed" : isSaving ? "Saving to database" : "SQLite database connected"}</div>
-          <Link className="profile-link" href="/">
-            <span className="profile-avatar">JM</span>
-            <span className="profile-copy"><strong>Jordan Miller</strong><small>Restaurant manager</small></span>
-            <span className="chevron" aria-hidden="true">⌄</span>
-          </Link>
+          <div className="profile-link"><UserButton /><span className="profile-copy"><strong>Your account</strong><small>Manage profile and sign out</small></span></div>
         </div>
       </aside>
 
       <main className="main-content">
         <header className="topbar">
-          <div className="breadcrumb"><Link href="/">Bar Siena</Link><span className="breadcrumb-divider">/</span><strong>Inventory</strong></div>
-          <div className="topbar-actions"><span className={`service-pill${databaseStatus === "error" ? " is-offline" : ""}`}><span className="status-dot" />{databaseStatus === "loading" ? "Connecting" : databaseStatus === "error" ? "Database offline" : isSaving ? "Saving changes" : "Database connected"}</span><span className="top-avatar">JM</span></div>
+          <div className="breadcrumb"><Link href="/">{restaurantIdentity.name}</Link><span className="breadcrumb-divider">/</span><strong>Inventory</strong></div>
+          <div className="topbar-actions"><span className={`service-pill${databaseStatus === "error" ? " is-offline" : ""}`}><span className="status-dot" />{databaseStatus === "loading" ? "Connecting" : databaseStatus === "error" ? "Database offline" : isSaving ? "Saving changes" : "Database connected"}</span></div>
         </header>
 
         <div className="page-content inventory-page">
           <section className="welcome-row" aria-labelledby="page-title">
             <div>
-              <p className="eyebrow">BAR SIENA <span className="eyebrow-dot">·</span> STOCK CONTROL</p>
+              <p className="eyebrow">{restaurantIdentity.name.toUpperCase()} <span className="eyebrow-dot">·</span> STOCK CONTROL</p>
               <h1 id="page-title">Inventory<span className="title-period">.</span></h1>
               <p className="welcome-subtitle">Ingredients, on-hand quantities, costs, and supplier history.</p>
             </div>

@@ -1,5 +1,6 @@
 import { createExpense, listExpenses } from "@/lib/expenses-db";
 import { expenseCategories, paymentMethods, type ExpenseInput } from "@/lib/expenses";
+import { getAuthenticatedUserId, unauthorizedApiResponse } from "@/lib/auth";
 
 type ExpenseBody = Partial<Record<keyof ExpenseInput, unknown>>;
 
@@ -36,6 +37,7 @@ function validateExpense(body: ExpenseBody): { input?: ExpenseInput; error?: str
 }
 
 export async function GET(request: Request) {
+  if (!await getAuthenticatedUserId()) return unauthorizedApiResponse();
   try {
     const url = new URL(request.url);
     const requestedLimit = Number(url.searchParams.get("limit") ?? 100);
@@ -47,6 +49,7 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
+  if (!await getAuthenticatedUserId()) return unauthorizedApiResponse();
   let body: ExpenseBody;
   try {
     body = await request.json() as ExpenseBody;

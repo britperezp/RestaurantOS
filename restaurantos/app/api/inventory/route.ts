@@ -1,5 +1,6 @@
 import { inventoryCategories, inventoryUnits } from "@/lib/inventory";
 import { createIngredient, listIngredients } from "@/lib/inventory-db";
+import { getAuthenticatedUserId, unauthorizedApiResponse } from "@/lib/auth";
 
 type CreateIngredientBody = {
   name?: unknown;
@@ -20,6 +21,7 @@ function isFiniteNumber(value: unknown): value is number {
 }
 
 export async function GET() {
+  if (!await getAuthenticatedUserId()) return unauthorizedApiResponse();
   try {
     return Response.json({ ingredients: listIngredients() }, { headers: { "Cache-Control": "no-store" } });
   } catch {
@@ -28,6 +30,7 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  if (!await getAuthenticatedUserId()) return unauthorizedApiResponse();
   let body: CreateIngredientBody;
   try {
     body = await request.json() as CreateIngredientBody;

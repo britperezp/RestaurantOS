@@ -1,9 +1,11 @@
 import Link from "next/link";
+import { UserButton } from "@clerk/nextjs";
 import type { ReactNode } from "react";
 
 import { Suspense } from "react";
 import { connection } from "next/server";
 import type { Expense } from "@/lib/expenses";
+import { restaurantIdentity } from "@/lib/restaurant-identity";
 import AddExpenseDialog from "./add-expense-dialog";
 
 const navigationItems = [
@@ -75,8 +77,8 @@ export default function Home() {
         </a>
 
         <div className="location-switcher">
-          <span className="location-avatar">B</span>
-          <span className="location-copy"><strong>Bar Siena</strong><small>Downtown · Chicago</small></span>
+          <span className="location-avatar">{restaurantIdentity.initial}</span>
+          <span className="location-copy"><strong>{restaurantIdentity.name}</strong><small>{restaurantIdentity.location}</small></span>
           <span className="chevron" aria-hidden="true">⌄</span>
         </div>
 
@@ -93,21 +95,16 @@ export default function Home() {
 
         <div className="sidebar-bottom">
           <div className="sidebar-note"><span className="status-dot" /> Books are up to date</div>
-          <a className="profile-link" href="#overview">
-            <span className="profile-avatar">JM</span>
-            <span className="profile-copy"><strong>Jordan Miller</strong><small>Restaurant manager</small></span>
-            <span className="chevron" aria-hidden="true">⌄</span>
-          </a>
+          <div className="profile-link"><UserButton /><span className="profile-copy"><strong>Your account</strong><small>Manage profile and sign out</small></span></div>
         </div>
       </aside>
 
       <main id="overview" className="main-content">
         <header className="topbar">
-          <div className="breadcrumb"><span>Bar Siena</span><span className="breadcrumb-divider">/</span><strong>Financial overview</strong></div>
+          <div className="breadcrumb"><span>{restaurantIdentity.name}</span><span className="breadcrumb-divider">/</span><strong>Financial overview</strong></div>
           <div className="topbar-actions">
             <span className="service-pill"><span className="status-dot" /> All locations</span>
             <button className="icon-button" type="button" aria-label="Notifications"><span className="bell-icon">♧</span><i /></button>
-            <span className="top-avatar">JM</span>
           </div>
         </header>
 
